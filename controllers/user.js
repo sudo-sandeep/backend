@@ -1,5 +1,6 @@
 import { ApiError, ApiResponse, asyncHandler } from "../utils/functions.js"
 import {User} from '../models/user.js'
+import jwt from 'jsonwebtoken'
 
 const generateAccessAndRefreshTokens = async(userId) => {
     try {
@@ -96,4 +97,30 @@ export const LOGOUT = asyncHandler(async(req,res,next)=>{
     } catch (error) {
         throw new ApiError(400,"Something went wrong while logout user.")
     }
+})
+
+export const REFRESH_TOKEN = asyncHandler(async(req,res,next)=>{
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+    if(!incomingRefreshToken){
+        throw new ApiError(401,"Unauthorized request.")
+    }
+    const decoded = jwt.verify(incomingRefreshToken,process.env.REFRESH_TOKEN_SECRET)
+    const user = await User.findById(decoded?._id)
+    if(!user){
+        throw new ApiError(401,"Invalid refresh token.")
+    }
+    if(user.refreshToken!==incomingRefreshToken){
+        throw new ApiError(401,"Unauthorized request.")
+    }
+    const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id);
+    const options = {
+        httponly:true,
+        secure:true
+    }
+
+    res
+    .status(200)
+    .cookie("accessToken",accessToken,options)
+    .cookie("refreshToken",refreshToken,options)
+    .json(new ApiResponse(200,{},"Access has been increased!"))
 })
