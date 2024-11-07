@@ -7,7 +7,7 @@ export const schemaValidator = (schema) => (req, res, next) => {
 };
 
 //Async Handler
-export const asynHandler = (fn) => async (req,res,next) => {
+export const asyncHandler = (fn) => async (req,res,next) => {
     try {
         await fn(req,res,next);
     } catch (error) {
@@ -49,3 +49,12 @@ class ApiResponse {
 }
 
 export {ApiResponse}
+
+//JOI Handler
+export const validateSchema = (schema) => asyncHandler((req,res,next) => {
+    const {error} = schema.validate(req.body);
+    if(error){
+        throw new ApiError(400,error.details[0].message)
+    }
+    next()
+})

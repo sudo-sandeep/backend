@@ -31,10 +31,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return;
-    this.password = await argon2.hash(this.password, {
-        secret: process.env.HASH_SECRET,
-        hashLength: 10,
-    });
+    this.password = await argon2.hash(this.password);
     next();
 });
 
