@@ -115,7 +115,7 @@ export const REFRESH_TOKEN = asyncHandler(async(req,res,next)=>{
     const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id);
     const options = {
         httponly:true,
-        secure:true
+        secure:false
     }
 
     res
