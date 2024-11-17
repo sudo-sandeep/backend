@@ -45,7 +45,7 @@ export const LOGIN = asyncHandler(async(req,res,next)=>{
     }
     const options = {
         httpOnly:true,
-        secure:true,
+        secure:false,
     }
     res
     .status(200)
@@ -87,7 +87,7 @@ export const LOGOUT = asyncHandler(async(req,res,next)=>{
         })
         const options = {
             httpOnly:true,
-            secure:true,
+            secure:false,
         }
         res
         .status(200)
