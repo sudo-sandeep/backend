@@ -7,12 +7,12 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 const corsOptions = {
-    origin: "*",
+    origin: "http://localhost:5173",
     methods: ["POST", "GET", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
-app.options('*', cors());
+app.options("http://localhost:5173", cors());
 app.use(cookieParser());
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
