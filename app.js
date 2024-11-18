@@ -9,6 +9,7 @@ const app = express();
 const corsOptions = {
     origin: "http://localhost:5173",
     allowedHeaders: ["Content-Type"],
+    credentials:true
 };
 app.use(cors(corsOptions));
 app.options("http://localhost:5173", cors());
